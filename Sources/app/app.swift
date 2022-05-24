@@ -19,7 +19,11 @@ func sinc(from:Float,to:Float,samples:Int)->[Float]{
 
 //print(sinc(from:-20,to:20,samples:25))
 
-func Convolve(input:[Float],filter:[Float])->[Float]{
+func Convolve(input:[Float],filter:[Float])->[Float]?{
+  guard input.count >= filter.count else {
+    print("input is smaller than filter")
+    return nil
+  }
   let iLen = input.count 
   let fLen = filter.count
   var y:[Float]=[]
@@ -35,7 +39,16 @@ func Convolve(input:[Float],filter:[Float])->[Float]{
   return y
 }
 
-func Correlate(input:[Float],filter:[Float])->[Float]{
+func Correlate(sig1:[Float],sig2:[Float])->[Float]{
+  var input:[Float]
+  var filter:[Float]
+  if sig1.count >= sig2.count{
+    input = sig1
+    filter = sig2
+  }else{
+    input = sig2
+    filter = sig1
+  }
   let iLen = input.count 
   let fLen = filter.count
   var y:[Float]=[]
@@ -57,16 +70,26 @@ let s3:[Float]=[1,2,3,4,5,1]
 let s4:[Float]=[1,5,4,3,2,1]
 let s5:[Float]=[1,1,1,2,3,4,5,1,1,1,1,1,1,1,1,1]
 
-print("Convolution")
-let y = Convolve(input:s,filter:impulse)
-print(y)
-print("in: \(pulse.count) flit: \(impulse.count) out: \(y.count)")
-print("ramp against itself")
-print(Convolve(input:s1,filter:s1))
-print("ramp against flipped ramp")
-print(Convolve(input:s1,filter:s2))
-print(Convolve(input:s5,filter:s4))
 
-print("correlate")
-print(Correlate(input:s1,filter:s3))
-print(Correlate(input:s5,filter:s3))
+print("\nConvolution")
+if let y = Convolve(input:s,filter:impulse){
+  print(y)
+}
+
+print("ramp against itself")
+if let y = Convolve(input:s1,filter:s1){
+  print(y)
+}
+
+print("ramp against flipped ramp")
+if let y = Convolve(input:s1,filter:s2){
+  print(y)
+}
+
+if let y = Convolve(input:s5,filter:s4){
+  print(y)
+}
+
+print("\nCorrelation")
+print(Correlate(sig1:s1,sig2:s3))
+print(Correlate(sig1:s5,sig2:s3))
