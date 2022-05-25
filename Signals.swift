@@ -90,7 +90,7 @@ func sinc(from:Float,to:Float,magnitude:Float=1,samples:Int)->[Float]{
   let delta = (to-from)/(Float(samples-1))
   var x = from
   while x <= to{
-    y.append(magnitude*sin(x)/x)
+    y.append(magnitude*sin(x)/(x==0 ? 0.0000001 : x))
     x += delta
   }
   return y
