@@ -1,9 +1,4 @@
-// This is a basic program on Swift
-//
-// Try to modify and run it and check out
-// the output in the terminal below
-//
-// Happy coding! :-)
+
 import Foundation
 
 func sinc(from:Float,to:Float,samples:Int)->[Float]{
