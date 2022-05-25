@@ -1,11 +1,11 @@
 
 import Foundation
 
-
-let rampPeak = Float(10)
+let rampPeak = Float(20)
 var rampFilt = line(firsty:0,lasty:rampPeak,values:3)
-rampFilt.append(contentsOf:line(firsty:rampPeak,lasty:0,values:3))
-                
+rampFilt.append(contentsOf:line(firsty:rampPeak,lasty:0,values:3,outStartIndex:1))
+
+/*
 var ramp:[Float] = line(firsty:0,lasty:0,values:30)
 ramp.append(contentsOf:rampFilt)
 ramp.append(contentsOf:line(firsty:0,lasty:0,values:30))
@@ -61,7 +61,7 @@ print("ramp against itself")
 if let y = Convolve(input:ramp,filter:ramp){
   print(y)
 }
-y
+
 print("ramp against flipped ramp")
 if let y = Convolve(input:s1,filter:s2){
   print(y)
@@ -75,3 +75,16 @@ print("\nCorrelation")
 print(Correlate(sig1:rampFilt,sig2:ramp))
 print("as x,y")
 print(coordValues(values:Correlate(sig1:rampFilt,sig2:ramp),delta:10))
+
+*/
+print("sine wave with ramp pulse added")
+let sinw = sinWave(from:-25,to:25,magnitude:5,samples:100)
+print("sin count: \(sinw.count)")
+let added = add(line1:rampFilt,offset1:50,line2:sinw,offset2:0)
+print("added count: \(added.count)")
+print(added)
+print("as x,y")
+print(coordValues(values:added,delta:5))
+print("correlate with ramp")
+let corr = Correlate(sig1:added,sig2:rampFilt)
+print(coordValues(values:corr,delta:5))
