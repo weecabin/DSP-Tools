@@ -14,8 +14,9 @@ func line(firsty:Float,lasty:Float,values:Int)->[Float]{
   return ret
 }
 
-var rampFilt = line(firsty:0,lasty:20,values:10)
-rampFilt.append(contentsOf:line(firsty:20,lasty:0,values:10))
+let rampPeak = Float(10)
+var rampFilt = line(firsty:0,lasty:rampPeak,values:3)
+rampFilt.append(contentsOf:line(firsty:rampPeak,lasty:0,values:3))
                 
 var ramp:[Float] = line(firsty:0,lasty:0,values:30)
 ramp.append(contentsOf:rampFilt)
