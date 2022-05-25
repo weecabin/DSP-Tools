@@ -1,18 +1,55 @@
 
 import Foundation
 
-func sinc(from:Float,to:Float,samples:Int)->[Float]{
+func line(firsty:Float,lasty:Float,values:Int)->[Float]{
+  let delta = (lasty-firsty)/(Float(values-1))
+  var value = firsty
+  var ret:[Float]=[]
+  var count:Int = 0
+  while(count < values){
+    ret.append(value)
+    value += delta
+    count += 1
+  }
+  return ret
+}
+
+var rampFilt = line(firsty:0,lasty:20,values:10)
+rampFilt.append(contentsOf:line(firsty:20,lasty:0,values:10))
+                
+var ramp:[Float] = line(firsty:0,lasty:0,values:30)
+ramp.append(contentsOf:rampFilt)
+ramp.append(contentsOf:line(firsty:0,lasty:0,values:30))
+print("computed ramp")
+print(ramp)
+print("computed rampFilt")
+print(rampFilt)
+
+func sinc(from:Float,to:Float,magnitude:Float=1,samples:Int)->[Float]{
   var y:[Float]=[]
   let delta = (to-from)/(Float(samples+1))
   var x = from
   while x <= to{
-    y.append(sin(x)/x)
+    y.append(magnitude*sin(x)/x)
     x += delta
   }
   return y
 }
 
-//print(sinc(from:-20,to:20,samples:25))
+func coordValues(values:[Float],delta:Int)->String{
+  var ret = ""
+  var x = 0
+  for val in values{
+    ret.append("\(x),\(val) ")
+    x += 10
+  }
+  return ret
+}
+
+let values = sinc(from:-25,to:25,magnitude:200,samples:50)
+print("sinc as x,y")
+print(coordValues(values:values,delta:10))
+
 
 func Convolve(input:[Float],filter:[Float])->[Float]?{
   guard input.count >= filter.count else {
@@ -72,7 +109,7 @@ if let y = Convolve(input:s,filter:impulse){
 }
 
 print("ramp against itself")
-if let y = Convolve(input:s1,filter:s1){
+if let y = Convolve(input:ramp,filter:ramp){
   print(y)
 }
 
@@ -86,5 +123,6 @@ if let y = Convolve(input:s5,filter:s4){
 }
 
 print("\nCorrelation")
-print(Correlate(sig1:s1,sig2:s3))
-print(Correlate(sig1:s5,sig2:s3))
+print(Correlate(sig1:rampFilt,sig2:ramp))
+print("as x,y")
+print(coordValues(values:Correlate(sig1:rampFilt,sig2:ramp),delta:10))
