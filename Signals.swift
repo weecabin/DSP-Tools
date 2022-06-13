@@ -90,7 +90,7 @@ func sinc(from:Float,to:Float,magnitude:Float=1,samples:Int)->[Float]{
   let delta = (to-from)/(Float(samples-1))
   var x = from
   while x <= to{
-    y.append(magnitude*sin(x)/(x==0 ? 0.0000001 : x))
+    y.append(magnitude*sin(1.5*x)/(x==0 ? 0.0000001 : 1.5*x))
     x += delta
   }
   return y
@@ -105,4 +105,57 @@ func sinWave(from:Float,to:Float,magnitude:Float=1,samples:Int)->[Float]{
     x += delta
   }
   return y
+}
+
+class Lpf{
+    init(b:Float=0.1){
+        self.b = b
+        unity = true
+    }
+    init(b:Float,a:Float){
+        self.b = b
+        self.a = a
+        unity = false
+    }
+    func settings()->Float{
+        return b
+    }
+    var y:Float = 0
+    var b:Float = 0.1
+    var a:Float = 0.9
+    private var unity:Bool = true
+    func Next(x:Float)->Float{
+        if unity{
+            y += b*(x - y)
+        }else{
+            y = a*y + b*x
+        }
+        return y
+    }
+}
+
+/*
+a0 = (1+x)/2 
+a1 = -(1&x)/2 
+b1 = x
+*/
+class Hpf{
+    init(decay:Float=0.9){
+        a0 = (1+decay)/2
+        a1 = -(1+decay)/2
+        b1 = decay
+    }
+    func Next(x:Float)->Float{
+        y1 = a0*x +  a1*x1 + b1*y1
+        x1 = x
+        return y1
+    }
+    func settings()->Float{
+        return b1
+    }
+    var a0:Float = 0
+    var a1:Float = 0
+    var b1:Float = 0
+    var y1:Float = 0
+    var x1:Float = 0
 }
