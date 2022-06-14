@@ -9,25 +9,25 @@ func Step(x:Float)->Float{
     if x>=10{return 1}
     else{return 0}
 }
-func Cos(w:Int,i:Int)->Float{
-    let delta = 2.0*Float.pi/Float(w)
-    return cos(Float(i)*delta)
+func Cos(samplesPerCycle sc:Int,s:Int )->Float{
+    let delta = 2.0*Float.pi/Float(sc)
+    return cos(Float(s)*delta)
 }
-let rampPeak = Float(20)
+let rampPeak = Float(50)
 var rampFilt = line(firsty:0,lasty:rampPeak,values:3)
 rampFilt.append(contentsOf:line(firsty:rampPeak,lasty:0,values:3,outStartIndex:1))
 
 var hpf = Hpf()
 var lpf = Lpf()
-var filt = Filt(ay1:-0.9,bx0:0.1,bx1:-0.7)
+var filt = Filt(ay1:0.9,bx0:0.1,bx1:0.85)
 var x:[Float]=[]
 for i in (0...75){
-    x.append(Cos(w:10,i:i))
+    x.append(Cos(samplesPerCycle:2,s:i))
 }
 
 var res:String=""
 for val in x{
-  res.append("\(String(format: "%.2f",filt.Next(x:val))) ")
+  res.append("\(String(format: "%.2f",hpf.Next(x:val))) ")
 }
 print(res)
 /*
