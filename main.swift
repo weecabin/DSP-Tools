@@ -1,17 +1,24 @@
 
 import Foundation
 
+func Impulse(x:Float)->Float{
+    if x==10{return 1}
+    return 0
+}
+func Step(x:Float)->Float{
+    if x>=10{return 1}
+    else{return 0}
+}
 let rampPeak = Float(20)
 var rampFilt = line(firsty:0,lasty:rampPeak,values:3)
 rampFilt.append(contentsOf:line(firsty:rampPeak,lasty:0,values:3,outStartIndex:1))
 
 var hpf = Hpf()
 var lpf = Lpf()
-var filt = Filt(ay1:-0.95,bx0:0,bx1:0.6)
+var filt = Filt(ay1:-0.9,bx0:0.1,bx1:0.7)
 var x:[Float]=[]
 for i in (0...75){
-    if i < 10{x.append(0)}
-    else {x.append(1)}
+    x.append(Step(x:Float(i)))
 }
 
 var res:String=""
