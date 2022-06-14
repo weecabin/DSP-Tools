@@ -7,15 +7,16 @@ rampFilt.append(contentsOf:line(firsty:rampPeak,lasty:0,values:3,outStartIndex:1
 
 var hpf = Hpf()
 var lpf = Lpf()
+var filt = Filt(ay1:-0.95,bx0:0,bx1:0.6)
 var x:[Float]=[]
-for i in (0...50){
+for i in (0...75){
     if i < 10{x.append(0)}
     else {x.append(1)}
 }
 
 var res:String=""
 for val in x{
-  res.append("\(String(format: "%.2f",lpf.Next(x:val)-hpf.Next(x:val))) ")
+  res.append("\(String(format: "%.2f",filt.Next(x:val))) ")
 }
 print(res)
 /*
